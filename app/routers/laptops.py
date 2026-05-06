@@ -55,9 +55,22 @@ async def create_laptop_endpoint(
 async def list_laptops_endpoint(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
+    brand: str | None = Query(default=None),
+    condition: str | None = Query(default=None),
+    price_min: float | None = Query(default=None, ge=0),
+    price_max: float | None = Query(default=None, ge=0),
+    search: str | None = Query(default=None),
 ):
-    """List all laptop listings with pagination."""
-    laptops = await laptop_service.list(skip, limit)
+    """List all laptop listings with pagination and filtering."""
+    laptops = await laptop_service.search(
+        brand=brand,
+        condition=condition,
+        price_min=price_min,
+        price_max=price_max,
+        search=search,
+        skip=skip,
+        limit=limit,
+    )
     return [LaptopResponse(**serialize_laptop(laptop)) for laptop in laptops]
 
 

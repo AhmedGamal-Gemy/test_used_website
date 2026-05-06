@@ -5,6 +5,8 @@ This base class is used by all entity-specific repositories
 to avoid code duplication and provide a consistent interface.
 """
 
+from __future__ import annotations
+
 from typing import Any
 from bson import ObjectId
 from pymongo import AsyncMongoClient
@@ -32,6 +34,13 @@ class BaseRepository:
     async def list(self, skip: int, limit: int) -> list[dict[str, Any]]:
         """List documents with pagination (skip + limit)."""
         cursor = self._collection.find().skip(skip).limit(limit)
+        return await cursor.to_list(length=limit)
+
+    async def find_with_filters(
+        self, filters: dict[str, Any], skip: int, limit: int
+    ) -> list[dict[str, Any]]:
+        """Find documents matching filters with pagination."""
+        cursor = self._collection.find(filters).skip(skip).limit(limit)
         return await cursor.to_list(length=limit)
 
     async def update(self, entity_id: str, update_data: dict[str, Any]) -> None:

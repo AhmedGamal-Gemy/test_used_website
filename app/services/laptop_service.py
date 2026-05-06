@@ -5,6 +5,8 @@ Business logic for laptop CRUD operations.
 HTTP concerns are handled in the router layer.
 """
 
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from bson import ObjectId
 
@@ -35,6 +37,37 @@ class LaptopService(BaseService):
 
     async def list(self, skip: int, limit: int) -> list[dict]:
         return await self._repo.list(skip, limit)
+
+    async def search(
+        self,
+        brand: str | None = None,
+        condition: str | None = None,
+        price_min: float | None = None,
+        price_max: float | None = None,
+        search: str | None = None,
+        skip: int = 0,
+        limit: int = 20,
+    ) -> list[dict]:
+        """Search laptops with filters and pagination."""
+        from typing import Any
+        filters: dict[str, Any] = {}
+        if brand:
+            filters["brand"] = brand
+        if condition:
+            filters["condition"] = condition
+        if price_min is not None or price_max is not None:
+            price_filter: dict[str, Any] = {}
+            if price_min is not None:
+                price_filter["$gte"] = price_min
+            if price_max is not None:
+                price_filter["$lte"] = price_max
+            filters["price"] = price_filter
+        if search:
+            filters["$or"] = [
+                {"title": {"$regex": search, "$options": "i"}},
+                {"description": {"$regex": search, "$options": "i"}},
+            ]
+        return await self._repo.find_with_filters(filters, skip, limit)
 
     async def get(self, entity_id: str) -> dict:
         entity = await self._repo.find_by_id(entity_id)

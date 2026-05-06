@@ -55,9 +55,22 @@ async def create_part_endpoint(
 async def list_parts_endpoint(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
+    category: str | None = Query(default=None),
+    condition: str | None = Query(default=None),
+    price_min: float | None = Query(default=None, ge=0),
+    price_max: float | None = Query(default=None, ge=0),
+    search: str | None = Query(default=None),
 ):
-    """List all part listings with pagination."""
-    parts = await part_service.list(skip, limit)
+    """List all part listings with pagination and filtering."""
+    parts = await part_service.search(
+        category=category,
+        condition=condition,
+        price_min=price_min,
+        price_max=price_max,
+        search=search,
+        skip=skip,
+        limit=limit,
+    )
     return [PartResponse(**serialize_part(part)) for part in parts]
 
 
