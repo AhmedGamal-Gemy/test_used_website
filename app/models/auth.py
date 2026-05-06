@@ -66,3 +66,26 @@ class TokenResponse(BaseModel):
     """
     access_token: str
     token_type: str = "bearer"  # Default to "bearer" - standard for JWT
+
+
+# ------------------------------------------------------------------------------
+# Profile Schemas (user profile management)
+# ------------------------------------------------------------------------------
+
+
+class UserProfileResponse(BaseModel):
+    """Public user profile data."""
+    id: str
+    email: str
+    full_name: str | None = None
+    phone: str | None = None
+    location: str | None = None
+    avatar_url: str | None = None
+
+
+class UserProfileUpdate(BaseModel):
+    """Fields a user can update on their own profile."""
+    full_name: str | None = None
+    phone: str | None = None
+    location: str | None = None
+    avatar_url: str | None = None

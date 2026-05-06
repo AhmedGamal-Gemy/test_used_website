@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 
 from app.db.database import get_db
 from app.core.exceptions import register_exception_handlers
-from app.routers import auth, laptops, parts
+from app.routers import auth, laptops, parts, users
 
 
 # ------------------------------------------------------------------------------
@@ -44,6 +44,7 @@ register_exception_handlers(app)
 app.include_router(auth.router)
 app.include_router(laptops.router)
 app.include_router(parts.router)
+app.include_router(users.router)
 
 # Mount the uploads directory to serve uploaded images as static files
 uploads_dir = "uploads"
