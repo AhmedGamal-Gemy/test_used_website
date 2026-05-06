@@ -76,24 +76,49 @@ Server starts at `http://127.0.0.1:8000`
 - `DELETE /api/parts/{id}` — Delete part (owner only)
 - `POST /api/parts/{id}/image` — Upload part image (owner only)
 
+## Architecture
+
+Layered design following SOLID principles:
+
+```
+Request → Router (HTTP) → Service (Business Logic) → Repository (Data Access) → MongoDB
+```
+
+- **Routers**: HTTP layer only — parse requests, delegate to services, return responses
+- **Services**: Business logic — validation, ownership checks, domain exceptions
+- **Repositories**: Data access — generic CRUD operations on MongoDB collections
+- **Core**: Config constants, domain exceptions, security utilities
+
 ## Project Structure
 
 ```
 ├── app/
 │   ├── core/
-│   │   └── security.py      # JWT + password hashing
+│   │   ├── config.py          # Centralized config (JWT, image, pagination)
+│   │   ├── exceptions.py      # Domain exceptions + HTTP handlers
+│   │   └── security.py        # JWT + password hashing (Argon2)
 │   ├── db/
-│   │   └── database.py      # MongoDB connection
+│   │   └── database.py        # MongoDB AsyncMongoClient (singleton)
 │   ├── models/
-│   │   ├── auth.py           # Auth Pydantic schemas
-│   │   ├── laptops.py        # Laptop Pydantic schemas
-│   │   └── parts.py          # Parts Pydantic schemas
+│   │   ├── auth.py            # Auth Pydantic schemas
+│   │   ├── laptops.py         # Laptop Pydantic schemas
+│   │   └── parts.py           # Parts Pydantic schemas
+│   ├── repositories/
+│   │   ├── base.py            # Generic BaseRepository (CRUD, pagination)
+│   │   └── user_repo.py       # UserRepository (find_by_email)
 │   ├── routers/
-│   │   ├── auth.py           # Auth endpoints
-│   │   ├── laptops.py        # Laptop CRUD endpoints
-│   │   └── parts.py          # Parts CRUD endpoints
-│   └── main.py               # FastAPI app entry point
-├── uploads/                  # Uploaded images
-├── pyproject.toml            # Project dependencies
-└── .env.example              # Environment template
+│   │   ├── auth.py            # Auth endpoints (signup, signin, signout)
+│   │   ├── laptops.py         # Laptop CRUD endpoints
+│   │   └── parts.py           # Parts CRUD endpoints
+│   ├── services/
+│   │   ├── base.py            # BaseService (ownership, ID validation)
+│   │   ├── auth_service.py    # User signup/lookup logic
+│   │   ├── image_service.py   # Image upload/replace logic
+│   │   ├── laptop_service.py  # Laptop CRUD (inherits BaseService)
+│   │   └── part_service.py    # Part CRUD (inherits BaseService)
+│   └── main.py                # FastAPI app entry point (lifespan)
+├── uploads/                   # Uploaded images (served as static)
+├── docs/postman/              # Postman collections
+├── pyproject.toml             # Project dependencies (uv)
+└── .env.example               # Environment template
 ```
