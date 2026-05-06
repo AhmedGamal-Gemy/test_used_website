@@ -1,0 +1,143 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+
+  // ============================================================
+  // AGENTS - Free models ONLY on OpenCode Zen/Go
+  // ============================================================
+  "agents": {
+    "sisyphus": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "oracle": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "momus": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "metis": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "prometheus": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "explore": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "librarian": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "hephaestus": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ]
+    },
+
+    "atlas": {
+      "model": "opencode/big-pickle",
+      "fallback_models": [
+        "opencode-go/big-pickle"
+      ],
+      "disable": false
+    }
+  },
+
+  // ============================================================
+  // CATEGORIES - All free models
+  // ============================================================
+  "categories": {
+    "quick": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "unspecified-low": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "unspecified-high": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "deep": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "visual-engineering": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "ultrabrain": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "artistry": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    },
+    "writing": {
+      "model": "opencode/big-pickle",
+      "fallback_models": ["opencode-go/big-pickle"]
+    }
+  },
+
+  // ============================================================
+  // BACKGROUND TASKS - Conservative concurrency for free tiers
+  // ============================================================
+  "background_task": {
+    "defaultConcurrency": 3,
+    "providerConcurrency": {
+      "opencode": 5,
+      "opencode-go": 5
+    },
+    "modelConcurrency": {
+      "opencode/qwen3.6-plus-free": 3,
+      "opencode/gpt-5.4": 2
+    }
+  },
+
+  // ============================================================
+  // RUNTIME FALLBACK - Auto-switch on API errors
+  // ============================================================
+  "runtime_fallback": {
+    "enabled": true,
+    "max_fallback_attempts": 3,
+    "cooldown_seconds": 60,
+    "timeout_seconds": 30,
+    "notify_on_fallback": true
+  },
+
+  "experimental": {
+    "aggressive_truncation": true,
+    "task_system": true
+  },
+
+  "tmux": { "enabled": false }
+}

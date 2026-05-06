@@ -1,75 +1,75 @@
-# Load environment variables from .env file into os.environ
-# This must be called before accessing any environment variables
+"""
+MongoDB database connection using a Database class.
+
+Replaces global variables with an instance that manages the client and database.
+"""
+
 from dotenv import load_dotenv
 load_dotenv()
 
 import os
-# Import PyMongo's asynchronous MongoDB client (NOT Motor - as specified in requirements)
 from pymongo import AsyncMongoClient
 
-# Global variables to hold the client and database instances
-# These are initialized as None and created lazily on first use of get_database()
-_client = None
-_db = None
+from app.core.config import database_config
 
 
-async def get_database():
+class Database:
+    """Manages MongoDB client and database instances."""
+
+    def __init__(self) -> None:
+        self._client = AsyncMongoClient(database_config.url)
+        self._db = self._client[database_config.db_name]
+
+    @property
+    def db(self):
+        """Get the database instance."""
+        return self._db
+
+    async def close(self) -> None:
+        """Close the MongoDB client connection."""
+        await self._client.close()
+
+    @property
+    def users(self):
+        """Shortcut to the users collection."""
+        return self._db.users
+
+    @property
+    def laptops(self):
+        """Shortcut to the laptops collection."""
+        return self._db.laptops
+
+    @property
+    def parts(self):
+        """Shortcut to the parts collection."""
+        return self._db.parts
+
+
+def create_database() -> Database:
+    """Factory function to create a Database instance.
+
+    Validates that required environment variables are set.
     """
-    Returns the MongoDB database instance.
-    Initializes the AsyncMongoClient on first call using environment variables.
-    
-    Returns:
-        The MongoDB database instance for the configured database name
-    """
-    global _client, _db
-    
-    # If database is already initialized, return the cached instance
-    if _db is not None:
-        return _db
-    
-    # Read connection parameters from environment variables
-    # These should be set in your .env file (e.g., MONGODB_URL=mongodb://localhost:27017)
-    mongodb_url = os.environ.get("MONGODB_URL")
-    mongodb_db_name = os.environ.get("MONGODB_DB_NAME")
-    
-    # Validate that required environment variables are set
-    # This prevents runtime errors with unclear causes
-    if not mongodb_url:
+    if not database_config.url:
         raise ValueError(
             "MONGODB_URL environment variable is not set. "
             "Please add it to your .env file (e.g., MONGODB_URL=mongodb://localhost:27017)"
         )
-    if not mongodb_db_name:
+    if not database_config.db_name:
         raise ValueError(
             "MONGODB_DB_NAME environment variable is not set. "
             "Please add it to your .env file (e.g., MONGODB_DB_NAME=used_laptops_db)"
         )
-    
-    # Create the asynchronous MongoDB client using the URL from environment
-    # AsyncMongoClient is PyMongo's native async client (not Motor)
-    # The client is non-blocking and works with FastAPI's async endpoints
-    _client = AsyncMongoClient(mongodb_url)
-    
-    # Get the database instance by name from the client
-    # This doesn't actually connect yet - the connection happens on first operation
-    _db = _client[mongodb_db_name]
-    
-    return _db
+    return Database()
 
 
-async def close_database():
-    """
-    Closes the MongoDB client connection if it exists.
-    Resets global state for clean shutdown.
-    """
-    global _client, _db
-    
-    # Only attempt to close if client was initialized
-    if _client is not None:
-        # Close the client connection asynchronously
-        # This releases all network resources used by the client
-        await _client.close()
-        
-        # Reset global variables to None to allow reconnection if needed
-        _client = None
-        _db = None
+# Singleton instance - created on first access
+_db_instance: Database | None = None
+
+
+def get_db() -> Database:
+    """Get or create the singleton Database instance."""
+    global _db_instance
+    if _db_instance is None:
+        _db_instance = create_database()
+    return _db_instance
