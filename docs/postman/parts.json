@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "Parts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Parts CRUD endpoints for Used Laptops API"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "part_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Part",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Replacement Battery\",\n  \"category\": \"Battery\",\n  \"compatible_models\": [\"Dell XPS 15\", \"Dell XPS 17\"],\n  \"condition\": \"New\",\n  \"price\": 65,\n  \"description\": \"Brand new replacement battery for Dell XPS laptops\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/parts",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts"]
+        },
+        "description": "Create a new parts listing (auth required). Copy the returned _id to part_id variable."
+      }
+    },
+    {
+      "name": "List Parts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/parts?skip=0&limit=20",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts"],
+          "query": [
+            { "key": "skip", "value": "0" },
+            { "key": "limit", "value": "20" }
+          ]
+        },
+        "description": "List all parts listings with pagination"
+      }
+    },
+    {
+      "name": "Get Part by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/parts/{{part_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts", "{{part_id}}"]
+        },
+        "description": "Get a single part by its ID"
+      }
+    },
+    {
+      "name": "Update Part",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"price\": 55,\n  \"description\": \"Brand new replacement battery - discounted\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/parts/{{part_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts", "{{part_id}}"]
+        },
+        "description": "Update a parts listing (auth required, owner only)"
+      }
+    },
+    {
+      "name": "Delete Part",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/parts/{{part_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts", "{{part_id}}"]
+        },
+        "description": "Delete a parts listing (auth required, owner only)"
+      }
+    },
+    {
+      "name": "Upload Part Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "",
+              "description": "Image file to upload"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/parts/{{part_id}}/image",
+          "host": ["{{base_url}}"],
+          "path": ["api", "parts", "{{part_id}}", "image"]
+        },
+        "description": "Upload an image for a parts listing (auth required, owner only)"
+      }
+    }
+  ]
+}

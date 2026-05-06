@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "Laptops API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Laptop CRUD endpoints for Used Laptops API"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "laptop_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Laptop",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Dell XPS 15\",\n  \"brand\": \"Dell\",\n  \"model\": \"XPS 15 9520\",\n  \"condition\": \"Good\",\n  \"price\": 850,\n  \"description\": \"Lightly used Dell XPS 15 in good condition\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/laptops",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops"]
+        },
+        "description": "Create a new laptop listing (auth required). Copy the returned _id to laptop_id variable."
+      }
+    },
+    {
+      "name": "List Laptops",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/laptops?skip=0&limit=20",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops"],
+          "query": [
+            { "key": "skip", "value": "0" },
+            { "key": "limit", "value": "20" }
+          ]
+        },
+        "description": "List all laptop listings with pagination"
+      }
+    },
+    {
+      "name": "Get Laptop by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/laptops/{{laptop_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops", "{{laptop_id}}"]
+        },
+        "description": "Get a single laptop by its ID"
+      }
+    },
+    {
+      "name": "Update Laptop",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Dell XPS 15 - Updated\",\n  \"price\": 800\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/laptops/{{laptop_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops", "{{laptop_id}}"]
+        },
+        "description": "Update a laptop listing (auth required, owner only)"
+      }
+    },
+    {
+      "name": "Delete Laptop",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/laptops/{{laptop_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops", "{{laptop_id}}"]
+        },
+        "description": "Delete a laptop listing (auth required, owner only)"
+      }
+    },
+    {
+      "name": "Upload Laptop Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "",
+              "description": "Image file to upload"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/laptops/{{laptop_id}}/image",
+          "host": ["{{base_url}}"],
+          "path": ["api", "laptops", "{{laptop_id}}", "image"]
+        },
+        "description": "Upload an image for a laptop listing (auth required, owner only)"
+      }
+    }
+  ]
+}

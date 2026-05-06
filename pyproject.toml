@@ -1,0 +1,18 @@
+[project]
+name = "used-laptops-api"
+version = "0.1.0"
+description = "FastAPI backend for a used laptops and parts marketplace"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pymongo",
+    "pyjwt[crypto]",
+    "pwdlib[argon2]",
+    "pydantic",
+    "python-multipart",
+    "python-dotenv",
+]
+
+[tool.uv]
+dev-dependencies = []
