@@ -12,6 +12,7 @@ For junior developers:
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import os
+from contextlib import asynccontextmanager
 
 from app.db.database import get_database, close_database
 from app.routers import auth, laptops, parts
@@ -20,12 +21,35 @@ from app.routers import auth, laptops, parts
 # FastAPI Application Initialization
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# Lifespan Context Manager (replaces deprecated on_event)
+# ------------------------------------------------------------------------------
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager for FastAPI application.
+    
+    For junior developers:
+    - This replaces the deprecated @app.on_event("startup") and @app.on_event("shutdown")
+    - Code before yield runs on startup (database connection)
+    - Code after yield runs on shutdown (database disconnection)
+    - This is the modern way to handle lifecycle events in FastAPI
+    """
+    # Startup: connect to database
+    await get_database()
+    yield
+    # Shutdown: close database connection
+    await close_database()
+
+
 # Create the FastAPI application instance
 # title, description, and version appear in the OpenAPI docs (Swagger UI)
 app = FastAPI(
     title="Used Laptops API",
     description="API for buying and selling used laptops and computer parts",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # ------------------------------------------------------------------------------
@@ -48,32 +72,3 @@ app.include_router(parts.router)
 uploads_dir = "uploads"
 os.makedirs(uploads_dir, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
-
-# ------------------------------------------------------------------------------
-# Lifecycle Events
-# ------------------------------------------------------------------------------
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Initialize database connection on startup.
-    
-    For junior developers:
-    - This function runs when the FastAPI app starts up
-    - We call get_database() to establish the MongoDB connection
-    - The connection is cached in the database module for reuse
-    """
-    await get_database()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """
-    Close database connection on shutdown.
-    
-    For junior developers:
-    - This function runs when the FastAPI app shuts down
-    - We call close_database() to cleanly close the MongoDB connection
-    - This prevents connection leaks and ensures graceful shutdown
-    """
-    await close_database()

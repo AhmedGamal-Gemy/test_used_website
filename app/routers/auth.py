@@ -11,18 +11,15 @@ For junior developers:
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from bson import ObjectId
-from bson.errors import InvalidId
 
-from app.db.database import get_database
 from app.core.security import (
-    get_password_hash,
     verify_password,
     create_access_token,
     decode_access_token,
     DUMMY_HASH,
 )
 from app.models.auth import UserSignup, UserSignin, UserResponse, TokenResponse
+from app.services.auth_service import create_user, find_user_by_email, get_user_by_id
 
 # ------------------------------------------------------------------------------
 # Router Configuration
@@ -48,7 +45,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     1. FastAPI sees this dependency needs a `token` parameter
     2. It uses `oauth2_scheme` to extract the token from the Authorization header
     3. We decode the token to get the user ID (stored in the "sub" claim)
-    4. We look up the user in the database
+    4. We look up the user in the database using the auth service
     5. If valid, we return the user; if not, we raise a 401 error
     
     This dependency can be used in any protected endpoint like:
@@ -79,25 +76,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     # Convert to string to ensure proper type
     user_id = str(user_id)
     
-    # Look up the user in the database
-    db = await get_database()
-    try:
-        # Convert string ID back to ObjectId for MongoDB query
-        user = await db.users.find_one({"_id": ObjectId(user_id)})
-    except InvalidId:
-        # If the ID in the token is not a valid ObjectId
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # Look up the user using the auth service
+    # This will raise 401 if user not found or ID is invalid
+    user = await get_user_by_id(user_id)
     
     return user
 
@@ -114,40 +95,20 @@ async def signup(user_data: UserSignup):
     Flow for junior developers:
     1. Client sends email + password in the request body
     2. FastAPI validates the request using the UserSignup model (validates email format)
-    3. We check if a user with this email already exists in the database
-    4. If yes → return 409 Conflict (email already registered)
-    5. If no → hash the password, save the user to database, return 201 Created
+    3. We use the auth service to create the user (checks for existing email, hashes password)
+    4. If email already exists → service raises 409 Conflict
+    5. If successful → return 201 Created with user data
     
     Note: We do NOT return a token here. The user needs to signin after signup.
     (Some APIs return a token here too, but we're keeping it simple.)
     """
-    db = await get_database()
-    
-    # Check if user with this email already exists
-    existing_user = await db.users.find_one({"email": user_data.email})
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered"
-        )
-    
-    # Hash the password before storing it (NEVER store plain-text passwords!)
-    hashed_password = get_password_hash(user_data.password)
-    
-    # Create the user document
-    # We let MongoDB generate the _id automatically
-    user_doc = {
-        "email": user_data.email,
-        "hashed_password": hashed_password,
-    }
-    
-    # Insert the user into the users collection
-    insert_result = await db.users.insert_one(user_doc)
+    # Use auth service to create user (handles duplicate check and password hashing)
+    user_doc = await create_user(user_data.email, user_data.password)
     
     # Return the user response (without the password hash!)
     return UserResponse(
         email=user_data.email,
-        id=str(insert_result.inserted_id)  # Convert ObjectId to string for the response
+        id=str(user_doc["_id"])  # Convert ObjectId to string for the response
     )
 
 
@@ -158,7 +119,7 @@ async def signin(user_data: UserSignin):
     
     Flow for junior developers:
     1. Client sends email + password in the request body
-    2. We look up the user by email in the database
+    2. We use the auth service to look up the user by email
     3. If user not found → still run password verification against DUMMY_HASH for timing attack protection
     4. If user found, verify the password using verify_password()
     5. If password doesn't match → return 401 Unauthorized
@@ -173,10 +134,8 @@ async def signin(user_data: UserSignin):
     If the user doesn't exist, we verify against DUMMY_HASH to ensure the response
     time is consistent whether the user exists or not.
     """
-    db = await get_database()
-    
-    # Look up the user by email
-    user = await db.users.find_one({"email": user_data.email})
+    # Use auth service to find user by email
+    user = await find_user_by_email(user_data.email)
     
     # For timing attack protection:
     # - If user exists, verify against their hashed_password
