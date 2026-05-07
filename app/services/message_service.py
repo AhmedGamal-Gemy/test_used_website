@@ -13,6 +13,8 @@ from bson.errors import InvalidId
 
 from app.core.exceptions import NotFoundError, ValidationError
 from app.db.database import get_db
+from app.services.notification_service import notify_new_message
+from app.repositories.user_repo import UserRepository
 
 
 def _validate_id(id_str: str, label: str) -> ObjectId:
@@ -47,6 +49,28 @@ async def send_message(
 
     result = await col.insert_one(msg_doc)
     msg_doc["_id"] = result.inserted_id
+
+    # Fire-and-forget notification to listing owner
+    try:
+        user_repo = UserRepository(get_db().users)
+        sender = await user_repo.find_by_id(str(sender_oid))
+        listing_col = get_db().db["laptops"] if listing_type == "laptop" else get_db().db["parts"]
+        listing = await listing_col.find_one({"_id": listing_oid})
+        if listing:
+            listing_owner = await user_repo.find_by_id(str(listing["seller_id"]))
+            if listing_owner and listing_owner.get("phone"):
+                import asyncio
+                asyncio.create_task(
+                    notify_new_message(
+                        listing_owner["phone"],
+                        sender.get("full_name", "Someone") if sender else "Someone",
+                        listing.get("title", "a listing"),
+                    )
+                )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed to queue notification")
+
     return msg_doc
 
 

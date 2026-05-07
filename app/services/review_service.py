@@ -13,6 +13,8 @@ from bson.errors import InvalidId
 
 from app.core.exceptions import ConflictError, NotFoundError, ValidationError
 from app.db.database import get_db
+from app.services.notification_service import notify_new_review
+from app.repositories.user_repo import UserRepository
 
 
 def _validate_id(id_str: str, label: str) -> ObjectId:
@@ -53,6 +55,25 @@ async def create_review(
 
     result = await reviews_col.insert_one(review_doc)
     review_doc["_id"] = result.inserted_id
+
+    # Fire-and-forget notification to seller
+    try:
+        user_repo = UserRepository(get_db().users)
+        reviewer = await user_repo.find_by_id(str(reviewer_oid))
+        seller = await user_repo.find_by_id(str(seller_oid))
+        if seller and seller.get("phone"):
+            import asyncio
+            asyncio.create_task(
+                notify_new_review(
+                    seller["phone"],
+                    reviewer.get("full_name", "Someone") if reviewer else "Someone",
+                    rating,
+                )
+            )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed to queue notification")
+
     return review_doc
 
 
