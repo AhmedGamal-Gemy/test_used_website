@@ -58,3 +58,31 @@ image_config = ImageConfig()
 pagination_config = PaginationConfig()
 jwt_config = JWTConfig()
 database_config = DatabaseConfig()
+
+
+class NotificationConfig:
+    """Notification provider configuration."""
+
+    @property
+    def provider(self) -> str:
+        return os.getenv("NOTIFICATION_PROVIDER", "console")
+
+
+class WhatsAppConfig:
+    """WhatsApp Business Cloud API configuration."""
+
+    @property
+    def token(self) -> str:
+        return os.getenv("WHATSAPP_TOKEN", "")
+
+    @property
+    def phone_number_id(self) -> str:
+        return os.getenv("WHATSAPP_PHONE_NUMBER_ID", "")
+
+    @property
+    def template_name(self) -> str:
+        return os.getenv("WHATSAPP_TEMPLATE_NAME", "notification_template")
+
+
+notification_config = NotificationConfig()
+whatsapp_config = WhatsAppConfig()
