@@ -7,6 +7,8 @@ Includes timing attack protection for password verification.
 
 import os
 import jwt
+import secrets
+import hashlib
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
@@ -70,3 +72,14 @@ def decode_access_token(token: str) -> dict:
         raise InvalidTokenError(
             f"Could not validate access token: {str(e)}"
         ) from e
+
+
+def generate_refresh_token() -> str:
+    """Generate a secure random refresh token (64 hex chars)."""
+    return secrets.token_hex(32)
+
+
+def hash_refresh_token(token: str) -> str:
+    """Hash a refresh token for secure storage (SHA-256)."""
+    return hashlib.sha256(token.encode()).hexdigest()
+

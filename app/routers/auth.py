@@ -1,5 +1,5 @@
 """
-Authentication router for user signup, signin, and signout.
+Authentication router for user signup, signin, signout, and token refresh.
 
 HTTP layer only - delegates business logic to auth_service.
 """
@@ -12,17 +12,17 @@ from app.core.security import (
     create_access_token,
     decode_access_token,
     DUMMY_HASH,
+    generate_refresh_token,
+    hash_refresh_token,
 )
-from app.models.auth import UserSignup, UserSignin, UserResponse, TokenResponse
-from app.services.auth_service import create_user, find_user_by_email, get_user_by_id
+from app.models.auth import UserSignup, UserSignin, UserResponse, RefreshTokenResponse
+from app.services.auth_service import create_user, find_user_by_email, get_user_by_id, refresh_tokens
 from app.repositories.user_repo import UserRepository
 from app.db.database import get_db
 
-# Repository instance for user operations
-user_repo = UserRepository(get_db().users)
-
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+user_repo = UserRepository(get_db().users)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/signin")
 
 
@@ -61,9 +61,9 @@ async def signup(user_data: UserSignup):
     )
 
 
-@router.post("/signin", response_model=TokenResponse)
+@router.post("/signin", response_model=RefreshTokenResponse)
 async def signin(user_data: UserSignin):
-    """Authenticate a user and return a JWT access token."""
+    """Authenticate a user and return JWT access token + refresh token."""
     user = await find_user_by_email(user_data.email, user_repo)
 
     if user:
@@ -80,15 +80,39 @@ async def signin(user_data: UserSignin):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # User is guaranteed to be non-None here since password_valid would be False otherwise
     assert user is not None
-    access_token = create_access_token(
-        token_payload={"sub": str(user["_id"])}
+    access_token = create_access_token(token_payload={"sub": str(user["_id"])})
+
+    refresh_token = generate_refresh_token()
+    refresh_hash = hash_refresh_token(refresh_token)
+    await user_repo.update_refresh_token(str(user["_id"]), refresh_hash)
+
+    return RefreshTokenResponse(
+        access_token=access_token,
+        refresh_token=refresh_token,
     )
-    return TokenResponse(access_token=access_token)
+
+
+@router.post("/refresh", response_model=RefreshTokenResponse)
+async def refresh(body: dict):
+    """Exchange a valid refresh token for a new access token and refresh token."""
+    token = body.get("refresh_token")
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="refresh_token is required",
+        )
+
+    payload, new_refresh_token = await refresh_tokens(token, user_repo)
+    access_token = create_access_token(token_payload=payload)
+    return RefreshTokenResponse(
+        access_token=access_token,
+        refresh_token=new_refresh_token,
+    )
 
 
 @router.post("/signout")
-async def signout():
-    """Sign out the current user (client-side token discard)."""
+async def signout(current_user: dict = Depends(get_current_user)):
+    """Sign out the current user and invalidate refresh token."""
+    await user_repo.update_refresh_token(current_user["_id"], "")
     return {"message": "Successfully signed out"}

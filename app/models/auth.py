@@ -89,3 +89,10 @@ class UserProfileUpdate(BaseModel):
     phone: str | None = None
     location: str | None = None
     avatar_url: str | None = None
+
+
+class RefreshTokenResponse(BaseModel):
+    """Response containing access token and refresh token."""
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
