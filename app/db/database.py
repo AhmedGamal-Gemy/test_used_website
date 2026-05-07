@@ -49,6 +49,11 @@ class Database:
         """Shortcut to the reviews collection."""
         return self._db.reviews
 
+    @property
+    def messages(self):
+        """Shortcut to the messages collection."""
+        return self._db.messages
+
 
 def create_database() -> Database:
     """Factory function to create a Database instance.
