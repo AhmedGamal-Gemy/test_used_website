@@ -1,0 +1,172 @@
+﻿{
+    "end_time":  "2026-05-06T13:21:05.7223262+03:00",
+    "test_steps":  [
+                       {
+                           "url":  "http://127.0.0.1:8080/api/auth/signup",
+                           "description":  "POST /api/auth/signup user A",
+                           "method":  "POST",
+                           "step":  "1",
+                           "response":  "{\"email\":\"userA@test.com\",\"id\":\"69fb161063d33b80ca1c8d27\"}",
+                           "success":  true,
+                           "actual_status":  "201",
+                           "expected_status":  "201",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/auth/signin",
+                           "description":  "POST /api/auth/signin user A",
+                           "method":  "POST",
+                           "step":  "2",
+                           "response":  "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWZiMTYxMDYzZDMzYjgwY2ExYzhkMjciLCJleHAiOjE3NzgwNjQ2NjR9.oCjkcTFQ6qTVdREset0FwS--yHBkIRDZtMBBGNBg9lw\",\"token_type\":\"bearer\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/auth/signup",
+                           "description":  "POST /api/auth/signup user B",
+                           "method":  "POST",
+                           "step":  "3",
+                           "response":  "{\"email\":\"userB@test.com\",\"id\":\"69fb161163d33b80ca1c8d28\"}",
+                           "success":  true,
+                           "actual_status":  "201",
+                           "expected_status":  "201",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/auth/signin",
+                           "description":  "POST /api/auth/signin user B",
+                           "method":  "POST",
+                           "step":  "4",
+                           "response":  "{\"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OWZiMTYxMTYzZDMzYjgwY2ExYzhkMjgiLCJleHAiOjE3NzgwNjQ2NjV9.rUvHPY-bX677eIEpZM3YMUVlpENSCB5qGhF6TrHEy-g\",\"token_type\":\"bearer\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops",
+                           "description":  "POST /api/laptops with token A",
+                           "method":  "POST",
+                           "step":  "5",
+                           "response":  "{\"id\":\"69fb161163d33b80ca1c8d29\",\"title\":\"ThinkPad T480\",\"brand\":\"Lenovo\",\"model\":\"T480\",\"condition\":\"good\",\"price\":599.99,\"description\":\"Great laptop\",\"image_url\":null,\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.244000\",\"updated_at\":\"2026-05-06T10:21:05.244000\"}",
+                           "success":  true,
+                           "actual_status":  "201",
+                           "expected_status":  "201",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/parts",
+                           "description":  "POST /api/parts with token A",
+                           "method":  "POST",
+                           "step":  "6",
+                           "response":  "{\"id\":\"69fb161163d33b80ca1c8d2a\",\"title\":\"16GB RAM\",\"category\":\"RAM\",\"compatible_models\":[\"T480\",\"T490\"],\"condition\":\"new\",\"price\":89.99,\"description\":\"DDR4 RAM\",\"image_url\":null,\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.287000\",\"updated_at\":\"2026-05-06T10:21:05.287000\"}",
+                           "success":  true,
+                           "actual_status":  "201",
+                           "expected_status":  "201",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops/69fb161163d33b80ca1c8d29/image",
+                           "description":  "POST image to laptop",
+                           "method":  "POST",
+                           "step":  "7",
+                           "response":  "{\"id\":\"69fb161163d33b80ca1c8d29\",\"title\":\"ThinkPad T480\",\"brand\":\"Lenovo\",\"model\":\"T480\",\"condition\":\"good\",\"price\":599.99,\"description\":\"Great laptop\",\"image_url\":\"/uploads/09083bee-f785-4813-831f-eefc2fd85e8e.jpg\",\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.244000\",\"updated_at\":\"2026-05-06T10:21:05.331000\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/parts/69fb161163d33b80ca1c8d2a/image",
+                           "description":  "POST image to part",
+                           "method":  "POST",
+                           "step":  "8",
+                           "response":  "{\"id\":\"69fb161163d33b80ca1c8d2a\",\"title\":\"16GB RAM\",\"category\":\"RAM\",\"compatible_models\":[\"T480\",\"T490\"],\"condition\":\"new\",\"price\":89.99,\"description\":\"DDR4 RAM\",\"image_url\":\"/uploads/bd77fbd8-8ddc-47cd-9799-a76f36d246be.jpg\",\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.287000\",\"updated_at\":\"2026-05-06T10:21:05.367000\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops/69fb161163d33b80ca1c8d29",
+                           "description":  "PUT laptop with token B (non-owner)",
+                           "method":  "PUT",
+                           "step":  "9",
+                           "response":  "{\"detail\":\"You can only update your own laptop listings\"}",
+                           "success":  true,
+                           "actual_status":  "403",
+                           "expected_status":  "403",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops/69fb161163d33b80ca1c8d29",
+                           "description":  "PUT laptop with token A (owner)",
+                           "method":  "PUT",
+                           "step":  "10",
+                           "response":  "{\"id\":\"69fb161163d33b80ca1c8d29\",\"title\":\"ThinkPad T480 Updated\",\"brand\":\"Lenovo\",\"model\":\"T480\",\"condition\":\"good\",\"price\":599.99,\"description\":\"Great laptop\",\"image_url\":\"/uploads/09083bee-f785-4813-831f-eefc2fd85e8e.jpg\",\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.244000\",\"updated_at\":\"2026-05-06T10:21:05.475000\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/parts/69fb161163d33b80ca1c8d2a",
+                           "description":  "DELETE part with token A",
+                           "method":  "DELETE",
+                           "step":  "11",
+                           "response":  "",
+                           "success":  true,
+                           "actual_status":  "204",
+                           "expected_status":  "204",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops?skip=0\u0026limit=10",
+                           "description":  "GET /api/laptops",
+                           "method":  "GET",
+                           "step":  "12",
+                           "response":  "[{\"id\":\"69fb161163d33b80ca1c8d29\",\"title\":\"ThinkPad T480 Updated\",\"brand\":\"Lenovo\",\"model\":\"T480\",\"condition\":\"good\",\"price\":599.99,\"description\":\"Great laptop\",\"image_url\":\"/uploads/09083bee-f785-4813-831f-eefc2fd85e8e.jpg\",\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.244000\",\"updated_at\":\"2026-05-06T10:21:05.475000\"}]",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/parts?skip=0\u0026limit=10",
+                           "description":  "GET /api/parts",
+                           "method":  "GET",
+                           "step":  "13",
+                           "response":  "[]",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/auth/signout",
+                           "description":  "POST /api/auth/signout",
+                           "method":  "POST",
+                           "step":  "14",
+                           "response":  "{\"message\":\"Successfully signed out\"}",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       },
+                       {
+                           "url":  "http://127.0.0.1:8080/api/laptops",
+                           "description":  "GET /api/laptops with invalid token",
+                           "method":  "GET",
+                           "step":  "15",
+                           "response":  "[{\"id\":\"69fb161163d33b80ca1c8d29\",\"title\":\"ThinkPad T480 Updated\",\"brand\":\"Lenovo\",\"model\":\"T480\",\"condition\":\"good\",\"price\":599.99,\"description\":\"Great laptop\",\"image_url\":\"/uploads/09083bee-f785-4813-831f-eefc2fd85e8e.jpg\",\"seller_id\":\"69fb161063d33b80ca1c8d27\",\"created_at\":\"2026-05-06T10:21:05.244000\",\"updated_at\":\"2026-05-06T10:21:05.475000\"}]",
+                           "success":  true,
+                           "actual_status":  "200",
+                           "expected_status":  "200",
+                           "error":  null
+                       }
+                   ],
+    "success":  true,
+    "start_time":  "2026-05-06T13:21:04.6566617+03:00"
+}
