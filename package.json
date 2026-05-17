@@ -1,0 +1,27 @@
+{
+  "name": "test_used_website",
+  "version": "1.0.0",
+  "description": "Full-stack marketplace application where users can sign up, list used laptops and computer parts for sale, communicate with sellers, and review vendors.",
+  "main": "e2e-contact-flow.spec.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhmedGamal-Gemy/test_used_website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AhmedGamal-Gemy/test_used_website/issues"
+  },
+  "homepage": "https://github.com/AhmedGamal-Gemy/test_used_website#readme",
+  "dependencies": {
+    "playwright": "^1.59.1"
+  }
+}

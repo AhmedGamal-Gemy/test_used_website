@@ -55,3 +55,11 @@ class BaseRepository:
         """Delete a document by ID."""
         obj_id = ObjectId(entity_id)
         await self._collection.delete_one({"_id": obj_id})
+
+    async def delete_many(self, entity_ids: list[str]) -> int:
+        """Delete multiple documents by IDs. Returns count of deleted docs."""
+        obj_ids = [ObjectId(oid) for oid in entity_ids if oid]
+        if not obj_ids:
+            return 0
+        result = await self._collection.delete_many({"_id": {"$in": obj_ids}})
+        return result.deleted_count

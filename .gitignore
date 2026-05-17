@@ -18,3 +18,16 @@ uploads/
 # OS files
 Thumbs.db
 .DS_Store
+
+# Node
+node_modules/
+
+# Logs and error files
+*.log
+*.err
+
+# Playwright artifacts
+.playwright-mcp/
+
+# Sisyphus working files
+.sisyphus/

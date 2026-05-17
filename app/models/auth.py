@@ -81,6 +81,9 @@ class UserProfileResponse(BaseModel):
     phone: str | None = None
     location: str | None = None
     avatar_url: str | None = None
+    role: str = "user"
+    favorite_laptops: list[str] = []
+    favorite_parts: list[str] = []
 
 
 class UserProfileUpdate(BaseModel):

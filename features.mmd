@@ -1,0 +1,56 @@
+flowchart LR
+  title(["🚀 Used Laptops & Parts Marketplace"])
+
+  subgraph R1["🔐 Authentication"]
+    A1("Sign up / Sign in")
+    A2("JWT access + refresh tokens")
+    A3("Auto refresh")
+    A4("Profile management")
+  end
+
+  subgraph R2["👀 Browse & Discovery"]
+    B1("Home – featured")
+    B2("Laptops grid")
+    B3("Parts grid")
+    B4("Services grid")
+    B5("Listing details")
+  end
+
+  subgraph R3["📦 Listing Management"]
+    L1("Create · Edit · Delete")
+    L2("Image upload")
+    L3("Search & filter")
+  end
+
+  subgraph R4["📋 Order System"]
+    O1("Place order")
+    O2("Track status")
+    O3("Admin manage")
+  end
+
+  subgraph R5["💬 Social Features"]
+    S1("Favorites")
+    S2("Rate sellers")
+    S3("Messages")
+  end
+
+  subgraph R6["⚙️ Admin Dashboard"]
+    D1("KPI cards · Charts")
+    D2("Bulk delete")
+    D3("User management")
+  end
+
+  subgraph R7["🛡️ Security"]
+    E1("NoSQL protection")
+    E2("JWT auth")
+    E3("Role-based access")
+    E4("Input validation")
+  end
+
+  subgraph R8["🎨 Frontend UX"]
+    U1("Responsive design")
+    U2("Spinners · Toasts")
+    U3("Route guards")
+  end
+
+  title --> R1 & R2 & R3 & R4 & R5 & R6 & R7 & R8

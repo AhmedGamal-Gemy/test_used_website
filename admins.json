@@ -1,0 +1,225 @@
+{
+  "admins": [
+    {
+      "id": "69fc99b60772c5221059cc55",
+      "email": "ahmed.admin@gmail.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "real",
+      "created_at": null,
+      "password": "AdminPass123!",
+      "note": "Password was reset to the value above"
+    },
+    {
+      "id": "6a01ff4f077f691954ee162f",
+      "email": "admin@marketplace.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "real",
+      "created_at": null,
+      "password": "AdminPass123!",
+      "note": "Password was reset to the value above"
+    },
+    {
+      "id": "6a02011fcb040e0aea60a3df",
+      "email": "john.admin@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a02011fcb040e0aea60a3e0",
+      "email": "sarah.admin@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a020120cb040e0aea60a3e1",
+      "email": "mike.admin@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a020121cb040e0aea60a3e2",
+      "email": "lisa.admin@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a020121cb040e0aea60a3e3",
+      "email": "admin.user@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0217966e87fb44b77cb1fb",
+      "email": "testuser@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a078c32b762cb55b548abe9",
+      "email": "admin_1778879538530@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a078cf0b762cb55b548abf1",
+      "email": "admin_1778879728057@test.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a078ee5677401b92fbda845",
+      "email": "admine2e_1778880228674@test.com",
+      "full_name": "Updated Name",
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a078f32677401b92fbda84d",
+      "email": "admine2e_1778880305828@test.com",
+      "full_name": "Updated Name",
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0790e5677401b92fbda855",
+      "email": "a_1778880741538@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0792da677401b92fbda860",
+      "email": "a_1778881242426@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0794d52cf182b94bbab928",
+      "email": "a_1778881749413@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0795e3f282673a5a08ce40",
+      "email": "a_1778882018549@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a0796b8793534f736f6bffd",
+      "email": "a_1778882232410@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a081ceac1a65bb0d89d2b9a",
+      "email": "ec_a_1778916584330@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a081de4417d834bcec42e7a",
+      "email": "ec_a_1778916836527@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a081e46f7a21ccc8107c03e",
+      "email": "ec_a_1778916933763@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a081e9d6933f74f05eda7d3",
+      "email": "ec_a_1778917021069@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    },
+    {
+      "id": "6a083853fe77b88c91b0a4a7",
+      "email": "bulktest3_1778923603810@t.com",
+      "full_name": null,
+      "role": "admin",
+      "type": "test",
+      "created_at": null,
+      "password": "TestPass123!",
+      "note": "E2E test artifact \u2014 safe to delete"
+    }
+  ],
+  "count": 22
+}

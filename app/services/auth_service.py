@@ -23,10 +23,20 @@ async def create_user(
     if existing:
         raise ConflictError("Email already registered")
 
+    # Check if this is the first user or if admin email matches
+    all_users = await user_repo.list(skip=0, limit=1)
+    is_first_user = len(all_users) == 0
+    
+    # Check if email matches admin email from environment
+    import os
+    admin_email = os.getenv("ADMIN_EMAIL", "").lower()
+    is_admin = is_first_user or email.lower() == admin_email
+
     hashed_password = get_password_hash(password)
     user_doc = {
         "email": email,
         "hashed_password": hashed_password,
+        "role": "admin" if is_admin else "user",
     }
 
     doc_id = await user_repo.create(user_doc)

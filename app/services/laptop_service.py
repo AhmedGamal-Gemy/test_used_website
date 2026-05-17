@@ -13,6 +13,7 @@ from bson import ObjectId
 from app.services.base import BaseService
 from app.models.laptops import LaptopCreate, LaptopUpdate
 from app.core.exceptions import NotFoundError
+from app.db.database import get_db
 
 LAPTOP_FIELDS = ["title", "brand", "model", "condition", "price", "description"]
 
@@ -21,6 +22,13 @@ class LaptopService(BaseService):
     """Service for laptop listing CRUD operations."""
 
     async def create(self, data: LaptopCreate, seller_id: ObjectId) -> dict:
+        # Check if user is admin
+        db = get_db()
+        user = await db.users.find_one({"_id": seller_id})
+        if not user or user.get("role") != "admin":
+            from app.core.exceptions import ForbiddenError
+            raise ForbiddenError("Only admin users can create listings")
+        
         now = datetime.now(timezone.utc)
         doc = {
             **{k: getattr(data, k) for k in LAPTOP_FIELDS},
@@ -70,6 +78,7 @@ class LaptopService(BaseService):
         return await self._repo.find_with_filters(filters, skip, limit)
 
     async def get(self, entity_id: str) -> dict:
+        self._parse_id(entity_id)  # validate format -> raises 400 for invalid ObjectId
         entity = await self._repo.find_by_id(entity_id)
         if entity is None:
             raise NotFoundError("Laptop not found")
@@ -79,7 +88,12 @@ class LaptopService(BaseService):
         self, entity_id: str, data: LaptopUpdate, user_id: ObjectId
     ) -> dict:
         entity = await self.get(entity_id)
-        await self._require_ownership(entity, user_id)
+        # Check if user is admin (admin can update any listing)
+        db = get_db()
+        user = await db.users.find_one({"_id": user_id})
+        if not user or user.get("role") != "admin":
+            from app.core.exceptions import ForbiddenError
+            raise ForbiddenError("Only admin users can update listings")
         update_data = self._build_partial_update(data, LAPTOP_FIELDS)
         update_data["updated_at"] = datetime.now(timezone.utc)
         await self._repo.update(entity_id, update_data)
@@ -90,5 +104,10 @@ class LaptopService(BaseService):
 
     async def delete(self, entity_id: str, user_id: ObjectId) -> None:
         entity = await self.get(entity_id)
-        await self._require_ownership(entity, user_id)
+        # Check if user is admin (admin can delete any listing)
+        db = get_db()
+        user = await db.users.find_one({"_id": user_id})
+        if not user or user.get("role") != "admin":
+            from app.core.exceptions import ForbiddenError
+            raise ForbiddenError("Only admin users can delete listings")
         await self._repo.delete(entity_id)

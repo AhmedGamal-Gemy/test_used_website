@@ -7,6 +7,10 @@ Frozen dataclasses prevent accidental mutation at runtime.
 
 import os
 from dataclasses import dataclass
+from dotenv import load_dotenv
+
+# Load .env from project root (auto-detected from CWD)
+load_dotenv()
 
 
 @dataclass(frozen=True)
@@ -53,11 +57,34 @@ class DatabaseConfig:
     db_name: str = os.environ.get("MONGODB_DB_NAME", "used_laptops_db")
 
 
+@dataclass(frozen=True)
+class ServerConfig:
+    """Configuration for the API server."""
+
+    host: str = os.environ.get("HOST", "127.0.0.1")
+
+    @property
+    def port(self) -> int:
+        try:
+            return int(os.environ.get("PORT", 8000))
+        except (ValueError, TypeError):
+            return 8000
+
+    @property
+    def frontend_urls(self) -> list[str]:
+        """CORS origins — comma-separated or default localhost variants."""
+        raw = os.environ.get("FRONTEND_URLS", "")
+        if raw:
+            return [u.strip() for u in raw.split(",") if u.strip()]
+        return ["http://localhost:5173", "http://127.0.0.1:5173"]
+
+
 # Singleton instances - import these directly where needed
 image_config = ImageConfig()
 pagination_config = PaginationConfig()
 jwt_config = JWTConfig()
 database_config = DatabaseConfig()
+server_config = ServerConfig()
 
 
 class NotificationConfig:
